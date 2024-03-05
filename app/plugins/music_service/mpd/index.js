@@ -441,6 +441,7 @@ ControllerMpd.prototype.parsePlaylist = function () {}
 ControllerMpd.prototype.parseState = function (objState) {
   var self = this
   self.logger.verbose('ControllerMpd::parseState')
+  console.log(JSON.stringify(objState, null, 2))
 
   // Pull track duration out of status message
   var nDuration = null

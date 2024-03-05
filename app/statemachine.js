@@ -435,8 +435,7 @@ CoreStateMachine.prototype.increasePlaybackTimer = function () {
       this.nextRandomIndex = undefined
 
       this.askedForPrefetch = false
-      this.pushState.bind(this)
-
+      this.pushState()
       // Push another state when new track starts after prefetch
       var trackUpdateTimeout = remainingTime + 50
       this.isConsume = false
@@ -604,6 +603,9 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
   if (stateService.status === 'play') {
     if (this.currentStatus === 'play') {
       this.commandRouter.pushConsoleMessage('Received an update from plugin. extracting info from payload')
+      console.log('stateService', JSON.stringify(stateService, null, 2))
+      console.log('trackBlock', JSON.stringify(trackBlock, null, 2))
+      console.log('getState', JSON.stringify(this.getState(), null, 2))
 
       // Checking if system is in consume mode. If it is the status shall be stored
       if (this.isConsume && stateService) {
@@ -723,6 +725,8 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
             }
 
             const newTrackBlockId = getTrackBlockId(trackBlock)
+            console.log('trackBlockId', trackBlockId)
+            console.log('newTrackBlockId', newTrackBlockId)
             if (this.stopAfterCurrent && trackBlockId !== newTrackBlockId) {
               this.commandRouter.volumioPause()
             }
@@ -930,7 +934,9 @@ CoreStateMachine.prototype.play = function (index) {
   var self = this
   this.stopAfterCurrent = false
 
-  this.commandRouter.pushConsoleMessage('CoreStateMachine::play index ' + index || self.currentPosition)
+  this.commandRouter.pushConsoleMessage(
+    'CoreStateMachine::play index:' + index + ', self.currentPosition:' + self.currentPosition
+  )
 
   return self.setConsumeUpdateService(undefined).then(function () {
     if (self.currentPosition == null || self.currentPosition === undefined) {
