@@ -6,18 +6,19 @@
 !index.js
 
 !app/
-!app/index.js
-!app/statemachine.js
-!app/playqueue.js
 !app/configManager.js
 !app/helpers.js
+!app/index.js
 !app/musiclibrary.js
 !app/platformSpecific.js
 !app/playlistManager.js
+!app/playqueue.js
 !app/pluginContext.js
 !app/pluginmanager.js
 !app/randomqueue.js
 !app/setupWirelessNetwork.js
+!app/statemachine.js
+!app/StopAfterCurrentService.js
 !app/volumecontrol.js
 
 !app/i18n/
