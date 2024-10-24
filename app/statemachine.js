@@ -435,8 +435,7 @@ CoreStateMachine.prototype.increasePlaybackTimer = function () {
       this.nextRandomIndex = undefined
 
       this.askedForPrefetch = false
-      this.pushState.bind(this)
-
+      this.pushState()
       // Push another state when new track starts after prefetch
       var trackUpdateTimeout = remainingTime + 50
       this.isConsume = false
