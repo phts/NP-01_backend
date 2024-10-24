@@ -23,7 +23,6 @@ function CoreStateMachine(commandRouter) {
   this.currentDisableVolumeControl = false
   this.lastSavedStateToString = '{}'
   this.isConsume = false
-  this.stopAfterCurrent = false
 
   /**
    * This variable contains the consume state to return when getState is being invoked
@@ -108,7 +107,6 @@ CoreStateMachine.prototype.getState = function () {
       year: this.volatileState.year,
       tracknumber: this.volatileState.tracknumber,
       queueTotal: this.playQueue.arrayQueue.length,
-      stopAfterCurrent: this.stopAfterCurrent,
     }
   } else if (this.isConsume) {
     // checking consumeState or the below code will throw an exception
@@ -160,7 +158,6 @@ CoreStateMachine.prototype.getState = function () {
         year: this.consumeState.year,
         tracknumber: this.consumeState.tracknumber,
         queueTotal: this.playQueue.arrayQueue.length,
-        stopAfterCurrent: this.stopAfterCurrent,
       }
     } else {
       return this.getEmptyState()
@@ -206,7 +203,7 @@ CoreStateMachine.prototype.getState = function () {
         year: trackBlock.year,
         tracknumber: trackBlock.tracknumber,
         queueTotal: this.playQueue.arrayQueue.length,
-        stopAfterCurrent: this.stopAfterCurrent,
+        stopAfterCurrent: this.currentStopAfterCurrent,
       }
     }
   }
@@ -240,7 +237,7 @@ CoreStateMachine.prototype.getEmptyState = function () {
     year: null,
     tracknumber: null,
     queueTotal: 0,
-    stopAfterCurrent: false,
+    stopAfterCurrent: this.currentStopAfterCurrent,
   }
 }
 
@@ -326,7 +323,7 @@ CoreStateMachine.prototype.resetVolumioState = function () {
     self.currentMute = null
     self.currentUpdate = false
     self.getCurrentVolume()
-    self.stopAfterCurrent = false
+    self.currentStopAfterCurrent = false
   })
 }
 
@@ -680,7 +677,7 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
           if (stateService.seek !== undefined) {
             this.currentSeek = stateService.seek
           }
-          this.stopAfterCurrent = stateService.stopAfterCurrent
+          this.currentStopAfterCurrent = stateService.stopAfterCurrent
 
           if (trackBlock !== undefined) {
             if (stateService.duration !== undefined) {
@@ -916,7 +913,6 @@ CoreStateMachine.prototype.getTrack = function (position) {
 
 CoreStateMachine.prototype.play = function (index) {
   var self = this
-  this.stopAfterCurrent = false
 
   this.commandRouter.pushConsoleMessage('CoreStateMachine::play index ' + index || self.currentPosition)
 
@@ -1086,7 +1082,6 @@ CoreStateMachine.prototype.seek = function (position) {
 
 CoreStateMachine.prototype.next = function (fromUser) {
   this.commandRouter.pushConsoleMessage('CoreStateMachine::next')
-  this.stopAfterCurrent = false
 
   if (fromUser) {
     if (this.debouncing) {
@@ -1143,7 +1138,6 @@ CoreStateMachine.prototype.next = function (fromUser) {
 
 CoreStateMachine.prototype.pause = function () {
   this.commandRouter.pushConsoleMessage('CoreStateMachine::pause')
-  this.stopAfterCurrent = false
 
   if (this.currentStatus === 'play') {
     this.currentStatus = 'pause'
@@ -1183,7 +1177,6 @@ CoreStateMachine.prototype.servicePause = function () {
 CoreStateMachine.prototype.stop = function () {
   var self = this
   this.commandRouter.pushConsoleMessage('CoreStateMachine::stop')
-  this.stopAfterCurrent = false
 
   if (this.isConsume && this.consumeState.service === 'tidal') {
     this.commandRouter.getMusicPlugin(this.consumeState.service).seek(0)
@@ -1234,7 +1227,6 @@ CoreStateMachine.prototype.serviceStop = function () {
 
 CoreStateMachine.prototype.previous = function (fromUser) {
   this.commandRouter.pushConsoleMessage('CoreStateMachine::previous')
-  this.stopAfterCurrent = false
 
   if (fromUser) {
     if (this.debouncing) {
@@ -1529,26 +1521,22 @@ CoreStateMachine.prototype.triggerInfinityPlaybackAddition = function () {
 CoreStateMachine.prototype.toggleStopAfterCurrent = function () {
   const {status, service, consume, volatile} = this.getState()
   if (status !== 'play') {
-    this.stopAfterCurrent = false
-    return {value: this.stopAfterCurrent, status: 'stopped'}
+    return {value: false, status: 'stopped'}
   }
   if (consume) {
-    this.stopAfterCurrent = false
-    return {value: this.stopAfterCurrent, status: 'consume'}
+    return {value: false, status: 'consume'}
   }
   if (volatile) {
-    this.stopAfterCurrent = false
-    return {value: this.stopAfterCurrent, status: 'volatile'}
+    return {value: false, status: 'volatile'}
   }
 
   var musicService = this.commandRouter.pluginManager.getPlugin('music_service', service)
 
   if (!musicService || typeof musicService.toggleStopAfterCurrent !== 'function') {
-    this.stopAfterCurrent = false
-    return {value: this.stopAfterCurrent, status: 'unsupported'}
+    return {value: false, status: 'unsupported'}
   }
-  const newValue = musicService.toggleStopAfterCurrent(!this.stopAfterCurrent)
-  this.stopAfterCurrent = newValue
+  const newValue = musicService.toggleStopAfterCurrent()
+  this.currentStopAfterCurrent = newValue
   this.pushState()
-  return {value: this.stopAfterCurrent, status: 'ok'}
+  return {value: newValue, status: 'ok'}
 }
