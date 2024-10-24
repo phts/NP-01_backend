@@ -1936,6 +1936,15 @@ function InterfaceWebUI(context) {
       const method = type || 'info'
       self.logger[method](`WS log: [${method}] ${msg}`)
     })
+
+    connWebSocket.on('toggleStopAfterCurrent', function () {
+      const {value, status} = self.commandRouter.toggleStopAfterCurrent()
+      self.commandRouter.pushToastMessage(
+        status === 'ok' ? 'success' : 'error',
+        self.commandRouter.getI18nString('TRACK_INFO_BAR.STOP_AFTER_CURRENT'),
+        status
+      )
+    })
   })
 }
 

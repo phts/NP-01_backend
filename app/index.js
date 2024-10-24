@@ -2259,3 +2259,7 @@ CoreCommandRouter.prototype.reportBackendEvent = function (event, properties) {
 CoreCommandRouter.prototype.registerThirdPartyUI = function (data) {
   this.executeOnPlugin('miscellanea', 'appearance', 'registerThirdPartyUI', data)
 }
+
+CoreCommandRouter.prototype.toggleStopAfterCurrent = function () {
+  return this.stateMachine.toggleStopAfterCurrent()
+}

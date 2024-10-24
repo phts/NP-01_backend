@@ -535,5 +535,8 @@
     "QOBUZ_FREE_TRIAL_DESC": "",
     "QOBUZ_LOGOUT_DESC": "",
     "SECTION_QOBUZ_ACCOUNT": ""
+  },
+  "TRACK_INFO_BAR": {
+    "STOP_AFTER_CURRENT": "Остановиться после текущего трека"
   }
 }
