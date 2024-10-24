@@ -409,7 +409,7 @@ ControllerAlsa.prototype.getUIConfig = function () {
         uiconf.sections[2].content[0].hidden = true
       }
 
-      if (outdevicename.toLowerCase().includes('pdif')) {
+      if (outdevicename.toLowerCase().includes('pdif') && !outdevicename.toLowerCase().includes('aes/ebu')) {
         value = false
         uiconf.sections[2].content[0].hidden = true
       }
@@ -782,7 +782,7 @@ ControllerAlsa.prototype.getDSPDACOptions = function (data) {
               var dspvalue = line[3]
                 .replace(/Item0:/g, '')
                 .replace(' ', '')
-                .replace(/'/g, '')
+                .replace(/\'/g, '')
                 .replace(/\s+/, '')
               // console.log('--'+dspvalue+'--')
               dspcontrols.push({name: dspname, options: dspoptsarray, value: dspvalue})
@@ -1260,7 +1260,6 @@ ControllerAlsa.prototype.getAlsaCards = function () {
 
   try {
     var aplaycards = self.getAplayInfo()
-    // eslint-disable-next-line no-labels
     aplay: for (var k = 0; k < aplaycards.length; k++) {
       var aplaycard = aplaycards[k]
       var name = aplaycard.name
@@ -1304,7 +1303,6 @@ ControllerAlsa.prototype.getAlsaCards = function () {
               name = carddata.cards[n].prettyname
               cards.push({id: id, alsacard: alsacard, name: name})
             }
-            // eslint-disable-next-line no-labels
             continue aplay
           }
         }
@@ -1379,6 +1377,7 @@ ControllerAlsa.prototype.getMixerControls = function (device) {
 
   var mixers = []
   var outdev = this.config.get('outputdevice')
+  var outdevicename = this.config.get('outputdevicename')
   if (outdev == 'softvolume') {
     outdev = this.config.get('softvolumenumber')
   }
@@ -1413,6 +1412,16 @@ ControllerAlsa.prototype.getMixerControls = function (device) {
 
   // We don't show available mixers for MP1 Spdif out
   if (systemInfo && systemInfo.hardware && systemInfo.hardware === 'mp1' && device === '0,2') {
+    mixers = []
+  }
+
+  if (
+    systemInfo &&
+    systemInfo.hardware &&
+    systemInfo.hardware === 'mp1' &&
+    outdevicename &&
+    outdevicename.toLowerCase().includes('pdif')
+  ) {
     mixers = []
   }
 
@@ -1455,7 +1464,6 @@ ControllerAlsa.prototype.setDefaultMixer = function (device) {
       self.logger.info('Found match in i2s Card Database: setting mixer ' + defaultmixer + ' for card ' + cardname)
     }
   } else {
-    // eslint-disable-next-line no-labels
     search: for (var n = 0; n < carddata.cards.length; n++) {
       if (carddata.cards[n].multidevice) {
         for (var j = 0; j < carddata.cards[n].devices.length; j++) {
@@ -1472,19 +1480,22 @@ ControllerAlsa.prototype.setDefaultMixer = function (device) {
               )
               self.commandRouter.sharedVars.set('alsa.outputdevicemixer', defaultmixer)
             }
-            // eslint-disable-next-line no-labels
             break search
           }
         }
       } else {
         var cardname = carddata.cards[n].prettyname.toString().trim()
         if (cardname == currentcardname) {
-          defaultmixer = carddata.cards[n].defaultmixer
-          self.logger.info(
-            'Found match in Cards Database: setting mixer ' + defaultmixer + ' for card ' + currentcardname
-          )
-          self.commandRouter.sharedVars.set('alsa.outputdevicemixer', defaultmixer)
-          // eslint-disable-next-line no-labels
+          if (carddata.cards[n].ignoreGenmixer === true) {
+            self.logger.info('Found match in Cards Database for ignoring default Mixer')
+            ignoreGenMixers = true
+          } else {
+            defaultmixer = carddata.cards[n].defaultmixer
+            self.logger.info(
+              'Found match in Cards Database: setting mixer ' + defaultmixer + ' for card ' + currentcardname
+            )
+            self.commandRouter.sharedVars.set('alsa.outputdevicemixer', defaultmixer)
+          }
           break search
         }
       }
