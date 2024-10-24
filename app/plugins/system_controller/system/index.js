@@ -6,7 +6,6 @@ var config = new (require('v-conf'))()
 var execSync = require('child_process').execSync
 var spawn = require('child_process').spawn
 var exec = require('child_process').exec
-var spawn = require('child_process').spawn
 var crypto = require('crypto')
 var os = require('os')
 var calltrials = 0
