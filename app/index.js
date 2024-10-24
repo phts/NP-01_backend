@@ -2256,10 +2256,6 @@ CoreCommandRouter.prototype.reportBackendEvent = function (event, properties) {
   }
 }
 
-CoreCommandRouter.prototype.toggleStopAfterCurrent = function () {
-  return this.stateMachine.toggleStopAfterCurrent()
-}
-
 CoreCommandRouter.prototype.registerThirdPartyUI = function (data) {
   this.executeOnPlugin('miscellanea', 'appearance', 'registerThirdPartyUI', data)
 }

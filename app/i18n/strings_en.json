@@ -575,8 +575,7 @@
     "QOBUZ_FREE_TRIAL_DESC": "Get 1 month free trial of QOBUZ HIFI (worth 19,99€)"
   },
   "TRACK_INFO_BAR": {
-    "INFINITY_PLAY": "Infinity play",
-    "STOP_AFTER_CURRENT": "Stop after current"
+    "INFINITY_PLAY": "Infinity play"
   },
   "MUSIC_SOURCES": {
     "BLUETOOTH_INPUT_PLAYBACK": "Bluetooth Input Playback",

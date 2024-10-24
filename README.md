@@ -8,7 +8,6 @@ Noticeable changes:
   - "Play next" (already implemented in original repo but keeping my own solution)
   - "Add to queue after current"
   - "Fast reboot" to restart only volumio service
-  - "Stop after current" (still unstable)
 - Add more data into player state to let UI and plugins show them:
   - Year
   - Track number (instead of physically insert it into track title)

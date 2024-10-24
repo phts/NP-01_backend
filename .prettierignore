@@ -10,7 +10,6 @@
 !app/statemachine.js
 !app/playqueue.js
 !app/configManager.js
-!app/helpers.js
 !app/musiclibrary.js
 !app/platformSpecific.js
 !app/playlistManager.js
