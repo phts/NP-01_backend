@@ -602,6 +602,9 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
   if (stateService.status === 'play') {
     if (this.currentStatus === 'play') {
       this.commandRouter.pushConsoleMessage('Received an update from plugin. extracting info from payload')
+      console.log('stateService', JSON.stringify(stateService, null, 2))
+      console.log('trackBlock', JSON.stringify(trackBlock, null, 2))
+      console.log('getState', JSON.stringify(this.getState(), null, 2))
 
       this.stopAfterCurrent.exec(stateService.uri)
 
