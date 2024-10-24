@@ -680,6 +680,7 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
           if (stateService.seek !== undefined) {
             this.currentSeek = stateService.seek
           }
+          this.stopAfterCurrent = stateService.stopAfterCurrent
 
           if (trackBlock !== undefined) {
             if (stateService.duration !== undefined) {
