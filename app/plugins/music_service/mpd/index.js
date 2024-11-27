@@ -24,6 +24,7 @@ var singleBrowse = false
 var startup = true
 var stickingMusicLibrary = false
 var collectionStats = {}
+var nextMoveToNextTrackDebounce
 
 // Define the ControllerMpd class
 module.exports = ControllerMpd
@@ -356,7 +357,7 @@ ControllerMpd.prototype.sendMpdCommand = function (sCommand, arrayParameters) {
       // If there's an error show an alert on UI
       if ('error' in respobject) {
         self.commandRouter.broadcastToastMessage('error', 'Error', respobject.error)
-
+        self.handleMPDPlaybackError(respobject)
         self.sendMpdCommand('clearerror', [])
       }
       const stop = Date.now()
@@ -425,7 +426,7 @@ ControllerMpd.prototype.parseTrackInfo = function (objTrackInfo) {
   } else {
     var file = objTrackInfo.file
     if (file !== undefined) {
-      var filetitle = file.replace(/^.*\/(?=[^/]*$)/, '')
+      var filetitle = file.replace(/^.*\/(?=[^\/]*$)/, '')
 
       resp.title = filetitle
     }
@@ -481,7 +482,7 @@ ControllerMpd.prototype.parsePlaylist = function (objQueue) {
   // objQueue is in form {'0': 'file: http://uk4.internet-radio.com:15938/', '1': 'file: http://2363.live.streamtheworld.com:80/KUSCMP128_SC'}
   // We want to convert to a straight array of trackIds
   return libQ.fcall(libFast.map, Object.keys(objQueue), function (currentKey) {
-    return null //this method does not exist convertUriToTrackId(objQueue[currentKey])
+    return convertUriToTrackId(objQueue[currentKey])
   })
 }
 
@@ -1610,7 +1611,9 @@ ControllerMpd.prototype.lsInfo = function (uri) {
                   genre = self.searchFor(lines, i + 1, 'Genre:')
                 }
 
-                if (!title) {
+                if (title) {
+                  title = title
+                } else {
                   title = name
                 }
                 var albumart = self.getAlbumArt('', self.getParentFolder('/mnt/' + path), 'music')
@@ -1693,7 +1696,9 @@ ControllerMpd.prototype.listallFolder = function (uri) {
               'fa-tags'
             )
 
-            if (!title) {
+            if (title) {
+              title = title
+            } else {
               title = name
             }
             list.push({
@@ -2216,7 +2221,9 @@ ControllerMpd.prototype.explodeUri = function (uri) {
                 }
                 var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-                if (!title) {
+                if (title) {
+                  title = title
+                } else {
                   title = name
                 }
 
@@ -2277,7 +2284,9 @@ ControllerMpd.prototype.explodeUri = function (uri) {
                 }
                 var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-                if (!title) {
+                if (title) {
+                  title = title
+                } else {
                   title = name
                 }
 
@@ -2359,7 +2368,9 @@ ControllerMpd.prototype.explodeUri = function (uri) {
             )
             var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-            if (!title) {
+            if (title) {
+              title = title
+            } else {
               title = name
             }
             list.push({
@@ -2468,7 +2479,9 @@ ControllerMpd.prototype.explodeUri = function (uri) {
             var albumart = self.getAlbumArt({artist: artist, album: album}, self.getParentFolder('/mnt/' + path))
             var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-            if (!title) {
+            if (title) {
+              title = title
+            } else {
               title = name
             }
 
@@ -2642,7 +2655,9 @@ ControllerMpd.prototype.exploderArtist = function (err, msg, defer) {
         var albumart = self.getAlbumArt({artist: artist, album: album}, self.getParentFolder('/mnt/' + path))
         var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-        if (!title) {
+        if (title) {
+          title = title
+        } else {
           title = name
         }
         list.push({
@@ -2770,7 +2785,9 @@ ControllerMpd.prototype.scanFolder = function (uri) {
               }
               var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-              if (!title) {
+              if (title) {
+                title = title
+              } else {
                 title = name
               }
               self.commandRouter.logger.info('ALBUMART ' + self.getAlbumArt({artist: artist, album: album}, uri))
@@ -2857,7 +2874,9 @@ ControllerMpd.prototype.explodeISOFile = function (uri) {
             }
             var time = parseInt(self.searchFor(lines, i + 1, 'Time:'))
 
-            if (!title) {
+            if (title) {
+              title = title
+            } else {
               title = name
             }
             self.commandRouter.logger.info(
@@ -3380,7 +3399,9 @@ ControllerMpd.prototype.listAlbumSongs = function (uri, index, previous) {
           genre = self.searchFor(lines, i + 1, 'Genre:')
           albumTrackType = trackType
 
-          if (!title) {
+          if (title) {
+            title = title
+          } else {
             title = name
           }
           response.navigation.lists[0].items.push({
@@ -3626,7 +3647,9 @@ ControllerMpd.prototype.parseListAlbum = function (err, msg, defer, response, ur
         }
         var albumart = self.getAlbumArt({artist: artist, album: album}, self.getParentFolder(path), 'dot-circle-o')
 
-        if (!title) {
+        if (title) {
+          title = title
+        } else {
           title = name
         }
 
@@ -3812,7 +3835,9 @@ ControllerMpd.prototype.listGenre = function (curUri) {
             }
             var albumart = self.getAlbumArt({artist: artist, album: album}, self.getParentFolder(path), 'dot-circle-o')
 
-            if (!title) {
+            if (title) {
+              title = title
+            } else {
               title = name
             }
 
@@ -4296,4 +4321,35 @@ ControllerMpd.prototype.checkIfMpdRequiresRescan = function () {
       }
     }
   })
+}
+
+ControllerMpd.prototype.handleMPDPlaybackError = function (statusOBJ) {
+  var self = this
+
+  // Handle tidal and qobuz failed to decode stream errors
+  if (
+    statusOBJ.error &&
+    statusOBJ.error.includes('Failed to decode') &&
+    statusOBJ.error.includes('http') &&
+    (statusOBJ.error.includes('tidal') || statusOBJ.error.includes('qobuz'))
+  ) {
+    self.logger.error('MPD Playback Error: Failed to decode stream, moving to next track')
+    self.moveToNextTrackAfterPlaybackError()
+  }
+}
+
+ControllerMpd.prototype.moveToNextTrackAfterPlaybackError = function () {
+  var self = this
+
+  if (nextMoveToNextTrackDebounce) {
+    clearTimeout(nextMoveToNextTrackDebounce)
+  }
+
+  nextMoveToNextTrackDebounce = setTimeout(function () {
+    var nextTrackPosition = self.commandRouter.stateMachine.getNextIndex()
+    if (nextTrackPosition !== undefined) {
+      self.logger.info('Moving to next track after playback error')
+      self.commandRouter.volumioPlay(nextTrackPosition)
+    }
+  }, 1000)
 }
