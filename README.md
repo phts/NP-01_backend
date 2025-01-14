@@ -1,8 +1,8 @@
 # PHTS NP-01: Volumio 3 backend
 
-This is a modification of original [volumio3-backend] which is used by [PHTS NP-01].
+This is a modification of [volumio3-backend] which is used by [PHTS NP-01].
 
-Noticeable changes:
+Tweaks made to [the original repo][volumio3-backend]:
 
 - New commands:
   - "Play next" (already implemented in original repo but keeping my own solution)
@@ -13,15 +13,17 @@ Noticeable changes:
   - Year
   - Track number (instead of physically insert it into track title)
   - Amount of queue items
-- Display bitrate and sample rate correctly
-- Fix and improve player action behavior:
+- User interface:
+  - Display bitrate and sample rate correctly
+  - Display special image when no albumart found instead of default one
+  - Improve translations and toast message texts
+- Core player behavior:
   - Reset volume, repeat and random state on queue clear (e.g. playing other album) and after reboot
   - Fix previous/next buttons behavior
   - Support "go to artist/album" for Spotify Connect mode
 - Improve UX of dev page
-- Improve translations and toast message texts
 - Improve stability, performance and fix a lot of bugs
-- [...and more][commits]
+- [...and many more][commits]
 
 ## Sync with original repo
 
