@@ -29,7 +29,11 @@ node_modules/
 !app/plugins/audio_interface/alsa_controller/
 !app/plugins/audio_interface/alsa_controller/index.js
 
-!app/plugins/miscellanea
+!app/plugins/miscellanea/
+!app/plugins/miscellanea/albumart/
+!app/plugins/miscellanea/albumart/albumart.js
+!app/plugins/miscellanea/albumart/index.js
+!app/plugins/miscellanea/albumart/serverStartup.js
 !app/plugins/miscellanea/appearance/
 !app/plugins/miscellanea/appearance/index.js
 
