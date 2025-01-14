@@ -134,7 +134,7 @@ var searchOnline = function (defer, web) {
       infoJson = fs.readJsonSync(infoPath, {throws: true})
     } catch (e) {
       // console.log("Invalid JSON " + infoPath);
-      defer.reject(new Error(err))
+      defer.reject(new Error())
       return defer.promise
     }
   }
@@ -146,7 +146,7 @@ var searchOnline = function (defer, web) {
       var decodedResolution = decodeURIComponent(resolution)
     } catch (e) {
       // console.log("ERROR getting albumart info from JSON file: " + e);
-      defer.reject(new Error(err))
+      defer.reject(new Error())
       return defer.promise
     }
 
@@ -628,7 +628,7 @@ var processExpressRequestTinyArt = function (req, res) {
         var pluginPaths = ['/volumio/app/plugins/', '/data/plugins/', '/myvolumio/plugins/', '/data/myvolumio/plugins/']
         try {
           var iconFound = false
-          for (i = 0; i < pluginPaths.length; i++) {
+          for (let i = 0; i < pluginPaths.length; i++) {
             var pluginIcon = pluginPaths[i] + sourceicon
             if (fs.existsSync(pluginIcon)) {
               iconFound = true
