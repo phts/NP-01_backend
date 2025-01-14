@@ -13,15 +13,17 @@ Noticeable changes:
   - Year
   - Track number (instead of physically insert it into track title)
   - Amount of queue items
-- Display bitrate and sample rate correctly
-- Fix and improve player action behavior:
+- User interface:
+  - Display bitrate and sample rate correctly
+  - Display special image when no albumart found instead of default one
+  - Improve translations and toast message texts
+- Core player behavior:
   - Reset volume, repeat and random state on queue clear (e.g. playing other album) and after reboot
   - Fix previous/next buttons behavior
   - Support "go to artist/album" for Spotify Connect mode
 - Improve UX of dev page
-- Improve translations and toast message texts
 - Improve stability, performance and fix a lot of bugs
-- [...and more][commits]
+- [...and many more][commits]
 
 ## Sync with original repo
 

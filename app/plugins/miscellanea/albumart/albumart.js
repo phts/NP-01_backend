@@ -1,5 +1,6 @@
 'use strict'
 
+var path = require('path')
 var Q = require('kew')
 var url = require('url')
 var S = require('string')
@@ -489,7 +490,7 @@ var processExpressRequest = function (req, res) {
             }
           }
         } catch (e) {
-          return sendDefaultAlbumart(req, res)
+          return sendNoAlbumart(req, res)
         }
       } else if (sourceicon !== undefined) {
         var pluginPaths = ['/volumio/app/plugins/', '/data/plugins/', '/myvolumio/plugins/', '/data/myvolumio/plugins/']
@@ -503,14 +504,14 @@ var processExpressRequest = function (req, res) {
             }
           }
           if (!iconFound) {
-            return sendDefaultAlbumart(req, res)
+            return sendNoAlbumart(req, res)
           }
         } catch (e) {
-          return sendDefaultAlbumart(req, res)
+          return sendNoAlbumart(req, res)
         }
       } else {
         res.setHeader('Cache-Control', 'public, max-age=' + maxage)
-        return sendDefaultAlbumart(req, res)
+        return sendNoAlbumart(req, res)
       }
     })
 }
@@ -789,6 +790,10 @@ var download = function (uri, dest, cb) {
 var sendDefaultAlbumart = function (req, res) {
   res.setHeader('Cache-Control', 'public, max-age=' + maxage)
   res.sendFile(__dirname + '/default.jpg')
+}
+
+var sendNoAlbumart = function (req, res) {
+  res.sendFile(path.join(__dirname, 'icons/no-albumart.svg'))
 }
 
 module.exports.processExpressRequest = processExpressRequest
