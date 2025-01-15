@@ -38,11 +38,7 @@ if (cluster.isMaster) {
     /**
      * Sending back error code 500
      **/
-    try {
-      res.sendFile(__dirname + '/default.jpg')
-    } catch (e) {
-      res.sendFile(__dirname + '/default.png')
-    }
+    res.sendFile(__dirname + '/default.png')
   })
 
   app.listen(process.argv[2])
