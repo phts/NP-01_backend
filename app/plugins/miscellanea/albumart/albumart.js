@@ -789,7 +789,7 @@ var download = function (uri, dest, cb) {
 
 var sendDefaultAlbumart = function (req, res) {
   res.setHeader('Cache-Control', 'public, max-age=' + maxage)
-  res.sendFile(__dirname + '/default.jpg')
+  res.sendFile(__dirname + '/default.png')
 }
 
 var sendNoAlbumart = function (req, res) {
