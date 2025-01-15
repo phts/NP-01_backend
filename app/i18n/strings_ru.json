@@ -537,6 +537,7 @@
     "SECTION_QOBUZ_ACCOUNT": ""
   },
   "TRACK_INFO_BAR": {
+    "INFINITY_PLAY": "Бесконечное воспроизведение",
     "STOP_AFTER_CURRENT": "Остановиться после текущего трека"
   }
 }
