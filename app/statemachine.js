@@ -110,6 +110,7 @@ CoreStateMachine.prototype.getState = function () {
       tracknumber: this.volatileState.tracknumber,
       queueTotal: this.playQueue.arrayQueue.length,
       stopAfterCurrent: this.stopAfterCurrent.isOn(),
+      favorite: null,
     }
   } else if (this.isConsume) {
     // checking consumeState or the below code will throw an exception
@@ -162,6 +163,7 @@ CoreStateMachine.prototype.getState = function () {
         tracknumber: this.consumeState.tracknumber,
         queueTotal: this.playQueue.arrayQueue.length,
         stopAfterCurrent: this.stopAfterCurrent.isOn(),
+        favorite: null,
       }
     } else {
       return this.getEmptyState()
@@ -208,6 +210,7 @@ CoreStateMachine.prototype.getState = function () {
         tracknumber: trackBlock.tracknumber,
         queueTotal: this.playQueue.arrayQueue.length,
         stopAfterCurrent: this.stopAfterCurrent.isOn(),
+        favorite: typeof trackBlock.favorite === 'boolean' ? trackBlock.favorite : null,
       }
     }
   }
@@ -242,6 +245,7 @@ CoreStateMachine.prototype.getEmptyState = function () {
     tracknumber: null,
     queueTotal: 0,
     stopAfterCurrent: false,
+    favorite: null,
   }
 }
 
@@ -654,6 +658,7 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
             bitrate: stateService.bitrate,
             stream: stateService.isStreaming,
             service: trackBlock.service,
+            favorite: null,
           }
         } else {
           if (process.env.UPNP_192_CAP === 'true' && this.isUpnp && stateService.samplerate) {
@@ -675,6 +680,7 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
             bitrate: stateService.bitrate,
             stream: stateService.isStreaming,
             service: stateService.service,
+            favorite: null,
           }
         }
       } else {
@@ -720,6 +726,9 @@ CoreStateMachine.prototype.syncState = function (stateService, sService) {
 
             if (stateService.albumart !== undefined && trackBlock.albumart === undefined) {
               trackBlock.albumart = stateService.albumart
+            }
+            if (typeof stateService.favorite !== 'undefined') {
+              trackBlock.favorite = stateService.favorite
             }
           }
         }

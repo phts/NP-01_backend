@@ -13,6 +13,7 @@ Tweaks made to [the original repo][volumio3-backend]:
   - Year
   - Track number (instead of physically insert it into track title)
   - Amount of queue items
+  - "Favorite" flag (received from service's state)
 - User interface:
   - Display bitrate and sample rate correctly
   - Display special image when no albumart found instead of default one
