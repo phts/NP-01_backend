@@ -13,6 +13,7 @@ Noticeable changes:
   - Year
   - Track number (instead of physically insert it into track title)
   - Amount of queue items
+  - Is track is favorite (received from service's state)
 - User interface:
   - Display bitrate and sample rate correctly
   - Display special image when no albumart found instead of default one
