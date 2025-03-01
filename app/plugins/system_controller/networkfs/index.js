@@ -533,7 +533,7 @@ ControllerNetworkfs.prototype.listShares = function (data) {
       promises.push(this.getMountSize(shares[i]));
     }
     libQ.all(promises).then(function (d) {
-      defer.resolve(d);
+      defer.resolve(d.sort((a,b) => `${a.ip}/${a.path}` >= `${b.ip}/${b.path}` ? 1 : -1));
     }).fail(function (e) {
       self.logger.error('Failed getting mounts size', e);
     });
@@ -572,6 +572,10 @@ ControllerNetworkfs.prototype.getMountSize = function (share) {
       var sizeStr = splitted[0];
 
       var size = parseInt(sizeStr) / 1024 / 1024;
+      if (isNaN(size)) {
+        resolve(respShare);
+        return;
+      }
       var unity = 'MB';
       if (size > 1024) {
         size = size / 1024;

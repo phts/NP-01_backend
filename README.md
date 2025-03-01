@@ -22,6 +22,8 @@ Tweaks made to [the original repo][volumio3-backend]:
   - Reset volume, repeat and random state on queue clear (e.g. playing other album) and after reboot
   - Fix previous/next buttons behavior
   - Support "go to artist/album" for Spotify Connect mode
+- Settings:
+  - Sot network drive list, fix `NaN` size
 - Improve UX of dev page
 - Improve stability, performance and fix a lot of bugs
 - [...and many more][commits]
