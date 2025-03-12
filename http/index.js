@@ -152,7 +152,7 @@ dev.use(function (err, req, res, next) {
 })
 
 app.route('/plugin-upload').post(function (req, res, next) {
-  let fileData = []
+  const fileData = []
 
   req.on('data', (chunk) => {
     fileData.push(chunk)
@@ -211,7 +211,7 @@ app.route('/plugin-upload').post(function (req, res, next) {
 })
 
 app.route('/backgrounds-upload').post(function (req, res, next) {
-  let fileData = []
+  const fileData = []
 
   req.on('data', (chunk) => {
     fileData.push(chunk)
@@ -283,7 +283,7 @@ app.route('/backgrounds-upload').post(function (req, res, next) {
 })
 
 app.route('/albumart-upload').post(function (req, res, next) {
-  let fileData = []
+  const fileData = []
   let artist, album, filePath
 
   req.on('data', (chunk) => {
