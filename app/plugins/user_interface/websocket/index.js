@@ -428,7 +428,11 @@ function InterfaceWebUI(context) {
             selfConnWebSocket.emit('pushBackup', result)
           })
           .fail(function () {
-            self.printToastMessage('error', self.commandRouter.getI18nString(COMMON.ERROR), 'Could not retrieve backup')
+            self.printToastMessage(
+              'error',
+              self.commandRouter.getI18nString('COMMON.ERROR'),
+              'Could not retrieve backup'
+            )
           })
       }
     })
@@ -440,7 +444,7 @@ function InterfaceWebUI(context) {
         .fail(function () {
           self.printToastMessage(
             'error',
-            self.commandRouter.getI18nString(COMMON.ERROR),
+            self.commandRouter.getI18nString('COMMON.ERROR'),
             'Could not restore configuration'
           )
         })
@@ -924,9 +928,7 @@ function InterfaceWebUI(context) {
               selfConnWebSocket.emit('updateReadyCache', updateMessage)
             }
           })
-          .fail(function () {
-            defer.resolve()
-          })
+          .fail(function () {})
       }
     })
 

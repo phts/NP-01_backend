@@ -799,7 +799,7 @@ ControllerAlsa.prototype.getDSPDACOptions = function (data) {
               var dspvalue = line[3]
                 .replace(/Item0:/g, '')
                 .replace(' ', '')
-                .replace(/\'/g, '')
+                .replace(/'/g, '')
                 .replace(/\s+/, '')
               // console.log('--'+dspvalue+'--')
               dspcontrols.push({name: dspname, options: dspoptsarray, value: dspvalue})

@@ -670,19 +670,19 @@ ControllerSystem.prototype.getSystemVersion = function () {
   for (var l = 0; l < nLines; l++) {
     if (file[l].match(/VOLUMIO_VERSION/i)) {
       str = file[l].split('=')
-      releaseinfo.systemversion = str[1].replace(/\"/gi, '')
+      releaseinfo.systemversion = str[1].replace(/"/gi, '')
     }
     if (file[l].match(/VOLUMIO_BUILD_DATE/i)) {
       str = file[l].split('=')
-      releaseinfo.builddate = str[1].replace(/\"/gi, '')
+      releaseinfo.builddate = str[1].replace(/"/gi, '')
     }
     if (file[l].match(/VOLUMIO_VARIANT/i)) {
       str = file[l].split('=')
-      releaseinfo.variant = str[1].replace(/\"/gi, '')
+      releaseinfo.variant = str[1].replace(/"/gi, '')
     }
     if (file[l].match(/VOLUMIO_HARDWARE/i)) {
       str = file[l].split('=')
-      releaseinfo.hardware = str[1].replace(/\"/gi, '')
+      releaseinfo.hardware = str[1].replace(/"/gi, '')
     }
   }
 
@@ -1081,13 +1081,10 @@ ControllerSystem.prototype.installToDisk = function () {
     )
     .then(self.ddToDisk.bind(self))
     .then(function (e) {
-      currentMessage = 'Unpacking plugin'
-      advancedlog = advancedlog + '<br>' + currentMessage
       self.pushMessage('installPluginStatus', {
         progress: 40,
-        message: currentMessage,
+        message: 'Unpacking plugin',
         title: modaltitle,
-        advancedLog: advancedlog,
       })
       return e
     })
@@ -1697,9 +1694,7 @@ ControllerSystem.prototype.enableLiveLog = function (data) {
 }
 
 ControllerSystem.prototype.getHwuuidEth = function () {
-  var self = this
-
-  var anonid = undefined
+  var anonid
   try {
     var macaddr = fs.readFileSync('/sys/class/net/eth0/address', 'utf8')
     anonid = macaddr.toString().replace(':', '')
@@ -1708,9 +1703,7 @@ ControllerSystem.prototype.getHwuuidEth = function () {
 }
 
 ControllerSystem.prototype.getHwuuidWlan = function () {
-  var self = this
-
-  var anonid = undefined
+  var anonid
   try {
     var macaddr = fs.readFileSync('/sys/class/net/wlan0/address', 'utf8')
     anonid = macaddr.toString().replace(':', '')
