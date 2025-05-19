@@ -23,7 +23,7 @@ Tweaks made to [the original repo][volumio3-backend]:
   - Fix previous/next buttons behavior
   - Support "go to artist/album" for Spotify Connect mode
 - Settings:
-  - Sot network drive list, fix `NaN` size
+  - Sort network drive list, fix `NaN` size
 - Improve UX of dev page
 - Improve stability, performance and fix a lot of bugs
 - [...and many more][commits]
