@@ -46,7 +46,6 @@ node_modules/
 !app/plugins/system_controller/volumio_command_line_client/volumio.sh
 !app/plugins/system_controller/system/
 !app/plugins/system_controller/system/UIConfig.json
-!app/plugins/system_controller/system/index.js
 
 !app/plugins/user_interface/
 !app/plugins/user_interface/rest_api/

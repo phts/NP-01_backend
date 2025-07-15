@@ -1948,6 +1948,23 @@ function InterfaceWebUI(context) {
       const method = type || 'info'
       self.logger[method](`WS log: [${method}] ${msg}`)
     })
+
+    connWebSocket.on('getUpdaterChannel', function () {
+      var selfConnWebSocket = this
+
+      var updaterChannel = self.commandRouter.executeOnPlugin('system_controller', 'system', 'getUpdaterChannel', '')
+      updaterChannel.then(function (data) {
+        if (data !== undefined) {
+          selfConnWebSocket.emit('pushUpdaterChannel', data)
+        }
+      })
+    })
+
+    connWebSocket.on('setUpdaterChannel', function (data) {
+      var selfConnWebSocket = this
+
+      self.commandRouter.executeOnPlugin('system_controller', 'system', 'setUpdaterChannel', data)
+    })
   })
 }
 
