@@ -108,7 +108,7 @@ CoreStateMachine.prototype.getState = function () {
       stream: this.volatileState.stream,
       updatedb: this.currentUpdate,
       volatile: true,
-      disableUiControls: this.volatileState.disableUiControls,
+      disableUiControls: this.isUpnp ? true : this.volatileState.disableUiControls,
       service: this.volatileState.service,
     }
   } else if (this.isConsume) {
@@ -154,6 +154,7 @@ CoreStateMachine.prototype.getState = function () {
         dbVolume: this.currentDbVolume,
         mute: this.currentMute,
         disableVolumeControl: this.currentDisableVolumeControl,
+        disableUiControls: this.isUpnp ? true : undefined,
         stream: this.consumeState.stream,
         updatedb: this.currentUpdate,
         volatile: false,
@@ -194,6 +195,7 @@ CoreStateMachine.prototype.getState = function () {
         volume: this.currentVolume,
         dbVolume: this.currentDbVolume,
         disableVolumeControl: this.currentDisableVolumeControl,
+        disableUiControls: this.isUpnp ? true : undefined,
         mute: this.currentMute,
         stream: trackBlock.trackType,
         updatedb: this.currentUpdate,
@@ -1517,6 +1519,26 @@ CoreStateMachine.prototype.moveQueueItem = function (from, to) {
 CoreStateMachine.prototype.setConsumeUpdateService = function (value, ignoremeta, upnp) {
   this.commandRouter.pushConsoleMessage('CoreStateMachine::setConsumeUpdateService ' + value)
 
+  var defer
+
+  /* if(value==undefined && this.consumeUpdateService!==undefined)
+	 {
+	 // shall stop MPD
+	 var mpdPlugin = this.commandRouter.pluginManager.getPlugin('music_service', 'mpd');
+	 defer= mpdPlugin.stop();
+	 }
+	 else if(value!==undefined && this.consumeUpdateService==undefined)
+	 {
+	 defer= this.stopPlaybackTimer()
+	 .then(this.updateTrackBlock.bind(this))
+	 .then(this.serviceStop.bind(this));
+	 }
+	 else */
+  {
+    defer = libQ.defer()
+    defer.resolve({})
+  }
+
   this.consumeUpdateService = value
   this.isConsume = value != undefined
   this.consumeState.service = value
@@ -1532,7 +1554,7 @@ CoreStateMachine.prototype.setConsumeUpdateService = function (value, ignoremeta
     this.isUpnp = false
   }
 
-  return libQ.resolve({})
+  return defer.promise
 }
 
 CoreStateMachine.prototype.sanitizeUri = function (uri) {
