@@ -1875,6 +1875,22 @@ function InterfaceWebUI(context) {
       }
     })
 
+    connWebSocket.on('getExtendedOutputDevices', function () {
+      var selfConnWebSocket = this
+
+      var audiolist = self.commandRouter.executeOnPlugin(
+        'audio_interface',
+        'alsa_controller',
+        'getExtendedOutputDevices',
+        ''
+      )
+      if (audiolist != undefined) {
+        audiolist.then(function (data) {
+          selfConnWebSocket.emit('pushExtendedOutputDevices', data)
+        })
+      }
+    })
+
     connWebSocket.on('getOutputDevices', function () {
       var selfConnWebSocket = this
 
