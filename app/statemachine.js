@@ -128,7 +128,9 @@ CoreStateMachine.prototype.getState = function () {
           this.consumeState.uri.includes(this.consumeState.title)
         ) {
           var trackBlock = this.getTrack(this.currentPosition)
-          this.consumeState.title = trackBlock.name || ''
+          if (trackBlock) {
+            this.consumeState.title = trackBlock.name || ''
+          }
         }
       }
 

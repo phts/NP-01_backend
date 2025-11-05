@@ -922,6 +922,9 @@ ControllerMpd.prototype.restartMpd = function (callback) {
   if (callback) {
     exec('/usr/bin/sudo /bin/systemctl restart mpd.service ', {uid: 1000, gid: 1000}, function (error) {
       self.mpdEstablish()
+      setTimeout(() => {
+        self.restartMpdMonitor()
+      }, 3000)
       callback(error)
     })
   } else {
@@ -930,9 +933,28 @@ ControllerMpd.prototype.restartMpd = function (callback) {
         self.logger.error('Cannot restart MPD: ' + error)
       } else {
         self.mpdEstablish()
+        setTimeout(() => {
+          self.restartMpdMonitor()
+        }, 3000)
       }
     })
   }
+}
+
+ControllerMpd.prototype.restartMpdMonitor = function () {
+  var self = this
+
+  exec(
+    '/usr/bin/sudo /bin/systemctl restart mpd_monitor.service',
+    {uid: 1000, gid: 1000},
+    function (error, stdout, stderr) {
+      if (error) {
+        self.logger.error('Cannot restart MPD Monitor: ' + error)
+      } else {
+        self.logger.info('Successfully started MPD Monitor')
+      }
+    }
+  )
 }
 
 ControllerMpd.prototype.createMPDFile = function (callback) {
