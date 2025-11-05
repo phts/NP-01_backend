@@ -1472,27 +1472,6 @@ CoreStateMachine.prototype.moveQueueItem = function (from, to) {
 
 CoreStateMachine.prototype.setConsumeUpdateService = function (value, ignoremeta, upnp) {
   this.commandRouter.pushConsoleMessage('CoreStateMachine::setConsumeUpdateService ' + value)
-
-  var defer
-
-  /* if(value==undefined && this.consumeUpdateService!==undefined)
-	 {
-	 // shall stop MPD
-	 var mpdPlugin = this.commandRouter.pluginManager.getPlugin('music_service', 'mpd');
-	 defer= mpdPlugin.stop();
-	 }
-	 else if(value!==undefined && this.consumeUpdateService==undefined)
-	 {
-	 defer= this.stopPlaybackTimer()
-	 .then(this.updateTrackBlock.bind(this))
-	 .then(this.serviceStop.bind(this));
-	 }
-	 else */
-  {
-    defer = libQ.defer()
-    defer.resolve({})
-  }
-
   this.consumeUpdateService = value
   this.isConsume = value != undefined
   this.consumeState.service = value
@@ -1508,7 +1487,7 @@ CoreStateMachine.prototype.setConsumeUpdateService = function (value, ignoremeta
     this.isUpnp = false
   }
 
-  return defer.promise
+  return libQ.resolve({})
 }
 
 CoreStateMachine.prototype.sanitizeUri = function (uri) {

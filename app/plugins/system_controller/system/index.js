@@ -687,7 +687,7 @@ ControllerSystem.prototype.getSystemVersion = function () {
     }
     if (file[l].match(/VERSION_ID/i)) {
       str = file[l].split('=')
-      releaseinfo.os = str[1].replace(/\"/gi, '')
+      releaseinfo.os = str[1].replace(/"/gi, '')
     }
   }
 
@@ -792,12 +792,12 @@ ControllerSystem.prototype.getCurrentUpdaterChannel = function (data) {
   try {
     fs.accessSync('/data/test')
     currentChannel = 'test'
-  } catch {}
+  } catch (e) {}
 
   try {
     fs.accessSync('/data/alpha')
     currentChannel = 'alpha'
-  } catch {}
+  } catch (e) {}
 
   defer.resolve(currentChannel)
   return defer.promise
