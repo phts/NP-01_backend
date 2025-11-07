@@ -402,7 +402,9 @@ CoreVolumeController.prototype.alsavolume = function (VolumeInteger) {
   } else {
     var defer = libQ.defer()
     self.logger.info('VolumeController::SetAlsaVolume' + VolumeInteger)
+    self.logger.info('VolumeController::SetAlsaVolume mixertype=' + mixertype)
     if (mixertype === 'None') {
+      self.logger.info('VolumeController::SetAlsaVolume None')
       Volume.vol = 100
       Volume.mute = false
       Volume.disableVolumeControl = true
