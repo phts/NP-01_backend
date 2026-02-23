@@ -35,3 +35,4 @@ spotify-login.txt
 .DS_Store
 package-lock.json
 .vscode/
+*.code-workspace
