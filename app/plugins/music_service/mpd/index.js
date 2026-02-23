@@ -321,7 +321,8 @@ ControllerMpd.prototype.sendMpdCommand = function (sCommand, arrayParameters) {
       var respobject = libMpd.parseKeyValueMessage(response)
       // If there's an error show an alert on UI
       if ('error' in respobject) {
-        self.commandRouter.broadcastToastMessage('error', 'Error', respobject.error)
+        self.logger.error('MPD returned error for command ' + sCommand + ': ' + respobject.error)
+        self.commandRouter.broadcastToastMessage('error', 'Error', self.humanizeMPDErrorString(respobject.error))
         self.handleMPDPlaybackError(respobject)
         self.sendMpdCommand('clearerror', [])
       }
@@ -332,6 +333,20 @@ ControllerMpd.prototype.sendMpdCommand = function (sCommand, arrayParameters) {
     })
 }
 
+ControllerMpd.prototype.humanizeMPDErrorString = function (errorString) {
+  var self = this
+
+  if (errorString.includes('No such device')) {
+    return self.commandRouter.getI18nString('PLAYBACK_OPTIONS.OUTPUT_DEVICE_NOT_AVAILABLE_CONNECT_IT')
+  } else if (errorString.includes('Device or resource busy')) {
+    return self.commandRouter.getI18nString('PLAYBACK_OPTIONS.OUTPUT_DEVICE_BUSY')
+  } else {
+    return errorString
+  }
+}
+
+// Define a general method for sending an array of MPD commands, and return a promise for its execution
+// Command array takes the form [{command: sCommand, parameters: arrayParameters}, ...]
 ControllerMpd.prototype.sendMpdCommandArray = function (arrayCommands) {
   var self = this
 

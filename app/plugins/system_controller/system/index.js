@@ -496,7 +496,6 @@ ControllerSystem.prototype.saveGeneralSettings = function (data) {
   var oldPlayerName = self.config.get('playerName')
   var player_name = data['player_name']
   if (player_name && player_name !== oldPlayerName) {
-    var hostname = data['player_name'].split(' ').join('-')
     self.config.set('playerName', player_name)
     self.commandRouter.pushToastMessage(
       'success',
@@ -506,6 +505,8 @@ ControllerSystem.prototype.saveGeneralSettings = function (data) {
     self.setHostname(player_name)
     self.commandRouter.sharedVars.set('system.name', player_name)
     defer.resolve({})
+
+    self.commandRouter.broadcastMessage('pushDeviceName', player_name)
 
     for (var i in self.callbacks) {
       var callback = self.callbacks[i]
